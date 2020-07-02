@@ -1,7 +1,7 @@
 apiVersion: v1
 entries:
   node-local-dns:
-  - apiVersion: v2
+  - apiVersion: v1
     appVersion: 1.15.13
     created: "2020-06-18T00:12:08.956873423+03:00"
     description: NodeLocal DNS Cache

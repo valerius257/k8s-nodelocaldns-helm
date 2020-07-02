@@ -6,9 +6,6 @@ metadata:
     {{- include "node-local-dns.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
-  {{- if ne .Values.config.nodeLocalSvcIp "__PILLAR__CLUSTER__DNS__" }}
-  clusterIP: {{ .Values.config.nodeLocalSvcIp }}
-  {{- end }}
   ports:
     - name: dns-udp
       port: {{ .Values.service.udpPort }}
