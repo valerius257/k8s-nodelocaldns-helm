@@ -14,7 +14,7 @@ data:
       }
       reload
       loop
-      bind {{ .Values.config.localDnsIp }} {{ .Values.config.kubeDnsSvcIp }}
+      bind {{ .Values.config.localDnsIp }} {{ .Values.config.dnsSvcIp }}
       {{- if .Values.config.upstreamDnsUseTcp }}
       forward . {{ .Values.config.nodeLocalSvcIp }} {
         force_tcp
@@ -30,7 +30,7 @@ data:
       cache 30
       reload
       loop
-      bind {{ .Values.config.localDnsIp }} {{ .Values.config.kubeDnsSvcIp }}
+      bind {{ .Values.config.localDnsIp }} {{ .Values.config.dnsSvcIp }}
       {{- if .Values.config.upstreamDnsUseTcp }}
       forward . {{ .Values.config.nodeLocalSvcIp }} {
         force_tcp
@@ -45,7 +45,7 @@ data:
       cache 30
       reload
       loop
-      bind {{ .Values.config.localDnsIp }} {{ .Values.config.kubeDnsSvcIp }}
+      bind {{ .Values.config.localDnsIp }} {{ .Values.config.dnsSvcIp }}
       {{- if .Values.config.upstreamDnsUseTcp }}
       forward . {{ .Values.config.nodeLocalSvcIp }} {
         force_tcp
@@ -60,7 +60,7 @@ data:
       cache 30
       reload
       loop
-      bind {{ .Values.config.localDnsIp }} {{ .Values.config.kubeDnsSvcIp }}
+      bind {{ .Values.config.localDnsIp }} {{ .Values.config.dnsSvcIp }}
       {{- if .Values.config.upstreamDnsUseTcp }}
       forward . {{ .Values.config.upstreamDns }} {
         force_tcp

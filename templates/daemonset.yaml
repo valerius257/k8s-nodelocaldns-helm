@@ -34,7 +34,11 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - -localip
+            {{- if .Values.config.dnsSvcIp }}
+            - "{{ .Values.config.localDnsIp }},{{ .Values.config.dnsSvcIp }}"
+            {{- else }}
             - {{ .Values.config.localDnsIp }}
+            {{- end }}
             - -conf
             - /etc/Corefile
             - -upstreamsvc

@@ -8,8 +8,8 @@ imagePullSecrets: []
 
 config:
   clusterDomain: cluster.local
-  localDnsIp: 169.254.20.10
-  kubeDnsSvcIp: 10.100.0.10
+  localDnsIp: 169.254.20.11
+  dnsSvcIp: 10.100.0.10
   nodeLocalSvcIp: __PILLAR__CLUSTER__DNS__   # random IP, could be changed to static
   upstreamDns: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
   upstreamDnsUseTcp: true
@@ -36,7 +36,7 @@ securityContext:
 
 livenessProbe:
   httpGet:
-    host: 169.254.20.10
+    host: 169.254.20.11
     path: /health
     port: 8080
   initialDelaySeconds: 60
