@@ -9,8 +9,8 @@ imagePullSecrets: []
 config:
   clusterDomain: cluster.local
   localDnsIp: 169.254.20.11
-  dnsSvcIp: 10.100.0.10
-  nodeLocalSvcIp: __PILLAR__CLUSTER__DNS__   # random IP, could be changed to static
+  dnsSvcIp: 10.100.0.10 # Leave this empty when using IPVS, when using iptables set to kubedns/CoreDNS service IP
+  nodeLocalSvcIp: __PILLAR__CLUSTER__DNS__   # Set to kubedns/CoreDNS service IP when using IPVS. For iptables leave default.
   upstreamDns: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
   upstreamDnsUseTcp: true
 
@@ -21,7 +21,7 @@ service:
   udpPort: 53
   tcpPort: 53
   upstreamSelector:
-    k8s-app: kube-dns
+    k8s-app: kube-dns # Set to coredns when using coredns
 
 updateStrategy:
   rollingUpdate:
