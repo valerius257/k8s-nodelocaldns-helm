@@ -7,9 +7,7 @@ image:
 imagePullSecrets: []
 
 config:
-  clusterDomain: cluster.local
   localDnsIp: 169.254.20.11
-  dnsSvcIp: 10.100.0.10 # Leave this empty when using IPVS, when using iptables set to kubedns/CoreDNS service IP
   nodeLocalSvcIp: __PILLAR__CLUSTER__DNS__   # Set to kubedns/CoreDNS service IP when using IPVS. For iptables leave default.
   upstreamDns: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
   upstreamDnsUseTcp: true
@@ -66,6 +64,4 @@ resources:
   requests:
     cpu: 25m
     memory: 5Mi
-  limits:
-    cpu: 50m
-    memory: 20Mi
+

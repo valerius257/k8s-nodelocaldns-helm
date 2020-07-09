@@ -6,61 +6,13 @@ metadata:
     {{- include "node-local-dns.labels" . | nindent 4 }}
 data:
   Corefile: |
-    {{ .Values.config.clusterDomain }}:53 {
-      errors
-      cache {
-        success 9984 30
-        denial 9984 5
-      }
-      reload
-      loop
-      bind {{ .Values.config.localDnsIp }} {{ .Values.config.dnsSvcIp }}
-      {{- if .Values.config.upstreamDnsUseTcp }}
-      forward . {{ .Values.config.nodeLocalSvcIp }} {
-        force_tcp
-      }
-      {{ else }}
-      forward . {{ .Values.config.nodeLocalSvcIp }}
-      {{- end }}
-      prometheus :9253
-      health {{ .Values.config.localDnsIp }}:8080
-    }
-    in-addr.arpa:53 {
-      errors
-      cache 30
-      reload
-      loop
-      bind {{ .Values.config.localDnsIp }} {{ .Values.config.dnsSvcIp }}
-      {{- if .Values.config.upstreamDnsUseTcp }}
-      forward . {{ .Values.config.nodeLocalSvcIp }} {
-        force_tcp
-      }
-      {{ else }}
-      forward . {{ .Values.config.nodeLocalSvcIp }}
-      {{- end }}
-      prometheus :9253
-    }
-    ip6.arpa:53 {
-      errors
-      cache 30
-      reload
-      loop
-      bind {{ .Values.config.localDnsIp }} {{ .Values.config.dnsSvcIp }}
-      {{- if .Values.config.upstreamDnsUseTcp }}
-      forward . {{ .Values.config.nodeLocalSvcIp }} {
-        force_tcp
-      }
-      {{ else }}
-      forward . {{ .Values.config.nodeLocalSvcIp }}
-      {{- end }}
-      prometheus :9253
-    }
     .:53 {
       errors
       cache 30
       reload
+      log
       loop
-      bind {{ .Values.config.localDnsIp }} {{ .Values.config.dnsSvcIp }}
+      bind {{ .Values.config.localDnsIp }}
       {{- if .Values.config.upstreamDnsUseTcp }}
       forward . {{ .Values.config.upstreamDns }} {
         force_tcp
@@ -69,4 +21,5 @@ data:
       forward . {{ .Values.config.upstreamDns }}
       {{- end }}
       prometheus :9253
+      health {{ .Values.config.localDnsIp }}:8080
     }
