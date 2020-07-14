@@ -10,7 +10,6 @@ data:
       errors
       cache 30
       reload
-      log
       loop
       bind {{ .Values.config.localDnsIp }}
       {{- if .Values.config.upstreamDnsUseTcp }}
