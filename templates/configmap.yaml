@@ -10,6 +10,9 @@ data:
       errors
       cache 30
       reload
+      {{- if .Values.config.enableLogging }}
+      log
+      {{- end }}
       loop
       bind {{ .Values.config.localDnsIp }}
       {{- if .Values.config.upstreamDnsUseTcp }}
@@ -19,6 +22,6 @@ data:
       {{ else }}
       forward . {{ .Values.config.upstreamDns }}
       {{- end }}
-      prometheus :9253
+      prometheus :{{ .Values.metrics.port }}
       health {{ .Values.config.localDnsIp }}:8080
     }

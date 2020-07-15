@@ -35,19 +35,14 @@ spec:
           args:
             - -localip
             - "{{ .Values.config.localDnsIp }}"
+            {{- if .Values.skipTeardown }}
+            - -skipteardown
+            {{- end }}
             - -conf
             - /etc/Corefile
-            - -upstreamsvc
-            - {{ include "node-local-dns.fullname" . }}-upstream
           ports:
-            - name: dns-udp
-              containerPort: 53
-              protocol: UDP
-            - name: dns-tcp
-              containerPort: 53
-              protocol: TCP
             - name: metrics
-              containerPort: 9253
+              containerPort: {{ .Values.metrics.port }}
               protocol: TCP
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -61,8 +56,6 @@ spec:
             - mountPath: /run/xtables.lock
               name: xtables-lock
               readOnly: false
-            - name: kube-dns-config
-              mountPath: /etc/kube-dns
             - name: config
               mountPath: /etc/coredns
       nodeSelector:
@@ -76,10 +69,6 @@ spec:
           hostPath:
             path: /run/xtables.lock
             type: FileOrCreate
-        - name: kube-dns-config
-          configMap:
-            name: kube-dns
-            optional: true
         - name: config
           configMap:
             name: {{ include "node-local-dns.fullname" . }}

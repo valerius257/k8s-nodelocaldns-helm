@@ -8,18 +8,11 @@ imagePullSecrets: []
 
 config:
   localDnsIp: 169.254.20.11
-  nodeLocalSvcIp: __PILLAR__CLUSTER__DNS__   # Set to kubedns/CoreDNS service IP when using IPVS. For iptables leave default.
   upstreamDns: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
   upstreamDnsUseTcp: true
+  enableLogging: true
 
 useHostNetwork: true
-
-service:
-  type: ClusterIP
-  udpPort: 53
-  tcpPort: 53
-  upstreamSelector:
-    k8s-app: kube-dns # Set to coredns when using coredns
 
 updateStrategy:
   rollingUpdate:
@@ -62,6 +55,10 @@ tolerations:
 
 resources:
   requests:
-    cpu: 25m
-    memory: 5Mi
+    cpu: 30m
+    memory: 50Mi
 
+metrics:
+  port: 9253
+
+skipTeardown: true
