@@ -13,6 +13,8 @@ spec:
   template:
     metadata:
       annotations:
+        prometheus.io/scrape: {{ .Values.metrics.prometheusScrape | quote }}
+        prometheus.io/port: {{ .Values.metrics.port | quote }}
         checksum/configmaps: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- if .Values.podAnnotations }}
         {{- toYaml .Values.podAnnotations | nindent 8 }}
@@ -40,6 +42,8 @@ spec:
             {{- end }}
             - -conf
             - /etc/Corefile
+            - -metrics-listen-address
+            - "0.0.0.0:{{add .Values.metrics.port 100}}"
           ports:
             - name: metrics
               containerPort: {{ .Values.metrics.port }}
@@ -47,7 +51,12 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           livenessProbe:
-            {{- toYaml .Values.livenessProbe | nindent 12 }}
+            httpGet:
+              host: {{ .Values.config.localDnsIp }}
+              path: /health
+              port: 8080
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
           readinessProbe:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
