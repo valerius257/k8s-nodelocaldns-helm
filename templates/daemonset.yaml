@@ -42,6 +42,10 @@ spec:
             {{- end }}
             - -conf
             - /etc/Corefile
+            - -syncinterval
+            - {{ .Values.syncInterval }}
+            - -interfacename
+            - {{ .Values.interfaceName }}
             - -metrics-listen-address
             - "0.0.0.0:{{add .Values.metrics.port 100}}"
           ports:

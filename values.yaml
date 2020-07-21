@@ -53,3 +53,5 @@ metrics:
   port: 9253
 
 skipTeardown: true
+syncInterval: 1ns
+interfaceName: nodelocaldns
