@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "node-local-dns.labels" . | nindent 4 }}
 data:
-  Corefile: |
+  Corefile: |-
     .:53 {
       errors
       cache 30
