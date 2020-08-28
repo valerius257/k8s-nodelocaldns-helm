@@ -8,9 +8,65 @@ imagePullSecrets: []
 
 config:
   localDnsIp: 169.254.20.11
-  upstreamDns: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
-  upstreamDnsUseTcp: true
-  enableLogging: true
+  zones:
+    - zone: .:53
+      plugins:
+        errors: true
+        reload: true
+        debug: false
+        log: true
+        cache:
+          parameters: 30
+          denial: {}
+            # size: 0
+            # ttl: 1
+          success: {}
+            # size: 8192
+            # ttl: 30
+          prefetch: {}
+            # amount: 1
+            # duration: 10m
+            # percentage: 20%
+          serve_stale: false
+        forward:
+          parameters: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
+          force_tcp: false
+          prefer_udp: false
+          policy: "" # random|round_robin|sequential
+          max_fails: "" # 10
+          expire: "" # 10s
+          health_check: "" # 10s
+        prometheus: true
+        health:
+          port: 8080
+    - zone: ip6.arpa:53
+      plugins:
+        errors: true
+        reload: true
+        debug: false
+        log: true
+        cache:
+          parameters: 30
+        forward:
+          parameters: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
+          force_tcp: false
+        prometheus: true
+        health:
+          port: 8080
+    - zone: in-addr.arpa:53
+      plugins:
+        errors: true
+        reload: true
+        debug: false
+        log: true
+        cache:
+          parameters: 30
+        forward:
+          parameters: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
+          force_tcp: false
+        prometheus: true
+        health:
+          port: 8080
 
 useHostNetwork: true
 

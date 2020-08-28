@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,22 +7,64 @@ metadata:
     {{- include "node-local-dns.labels" . | nindent 4 }}
 data:
   Corefile: |-
-    .:53 {
+    {{- $localDnsIp := .Values.config.localDnsIp -}}
+    {{- $metricsPort := .Values.metrics.port -}}
+
+    {{- range $zone := .Values.config.zones }}
+    {{ $zone.zone }} {
+      {{- if $zone.plugins.errors }}
       errors
-      cache 30
+      {{- end }}
+      cache {{ $zone.plugins.cache.parameters }} {
+        {{- if $zone.plugins.cache.denial }}
+        denial {{ $zone.plugins.cache.denial.size }} {{ if $zone.plugins.cache.denial.ttl }} {{ $zone.plugins.cache.denial.ttl }} {{ end }}
+        {{- end }}
+        {{- if $zone.plugins.cache.success }}
+        success {{ $zone.plugins.cache.success.size }} {{ if $zone.plugins.cache.success.ttl }} {{ $zone.plugins.cache.success.ttl }} {{ end }}
+        {{- end }}
+        {{- if $zone.plugins.cache.prefetch }}
+        prefetch {{ $zone.plugins.cache.prefetch.amount }} {{ if $zone.plugins.cache.prefetch.duration }} {{ $zone.plugins.cache.prefetch.duration }} {{ end }} {{ if $zone.plugins.cache.prefetch.percentage }} {{ $zone.plugins.cache.prefetch.percentage }} {{ end }}
+        {{- end }}
+        {{- if $zone.plugins.cache.server_stale }}
+        serve_stale
+        {{- end }}
+      }
+      {{- if $zone.plugins.reload }}
       reload
-      {{- if .Values.config.enableLogging }}
+      {{- end }}
+      {{- if $zone.plugins.log }}
       log
       {{- end }}
-      loop
-      bind {{ .Values.config.localDnsIp }}
-      {{- if .Values.config.upstreamDnsUseTcp }}
-      forward . {{ .Values.config.upstreamDns }} {
-        force_tcp
-      }
-      {{ else }}
-      forward . {{ .Values.config.upstreamDns }}
+      {{- if $zone.plugins.debug }}
+      debug
       {{- end }}
-      prometheus :{{ .Values.metrics.port }}
-      health {{ .Values.config.localDnsIp }}:8080
+      loop
+      bind {{ $localDnsIp }}
+      forward . {{ $zone.plugins.forward.parameters }} {
+      {{- if $zone.plugins.forward.policy }}
+        policy {{ $zone.plugins.forward.policy }}
+      {{- end }}
+      {{- if $zone.plugins.forward.force_tcp }}
+        force_tcp
+      {{- end }}
+      {{- if $zone.plugins.forward.prefer_udp }}
+        prefer_udp
+      {{- end }}
+      {{- if $zone.plugins.forward.max_fails }}
+        max_fails {{ $zone.plugins.forward.max_fails }}
+      {{- end }}
+      {{- if $zone.plugins.forward.expire }}
+        expire {{ $zone.plugins.forward.expire }}
+      {{- end }}
+      {{- if $zone.plugins.forward.health_check }}
+        expire {{ $zone.plugins.forward.health_check }}
+      {{- end }}
+      }
+      {{- if $zone.plugins.prometheus }}
+      prometheus :{{ $metricsPort }}
+      {{- end }}
+      {{- if $zone.plugins.health }}
+      health {{ $localDnsIp }}:{{ $zone.plugins.health.port }}
+      {{- end }}
     }
+    {{- end }}
