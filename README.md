@@ -47,18 +47,18 @@ config:
     __PILLAR__DNS__DOMAIN__:53 {
         errors
         cache {
-                success 9984 30
-                denial 9984 5
+          success 9984 30
+          denial 9984 5
         }
         reload
         loop
         bind __PILLAR__LOCAL__DNS__ __PILLAR__DNS__SERVER__
         forward . __PILLAR__CLUSTER__DNS__ {
-                force_tcp
+          force_tcp
         }
         prometheus :9253
         health __PILLAR__LOCAL__DNS__:8080
-        }
+    }
     in-addr.arpa:53 {
         errors
         cache 30
@@ -66,10 +66,10 @@ config:
         loop
         bind __PILLAR__LOCAL__DNS__ __PILLAR__DNS__SERVER__
         forward . __PILLAR__CLUSTER__DNS__ {
-                force_tcp
+          force_tcp
         }
         prometheus :9253
-        }
+    }
     ip6.arpa:53 {
         errors
         cache 30
@@ -77,10 +77,10 @@ config:
         loop
         bind __PILLAR__LOCAL__DNS__ __PILLAR__DNS__SERVER__
         forward . __PILLAR__CLUSTER__DNS__ {
-                force_tcp
+          force_tcp
         }
         prometheus :9253
-        }
+    }
     .:53 {
         errors
         cache 30
@@ -89,7 +89,7 @@ config:
         bind __PILLAR__LOCAL__DNS__ __PILLAR__DNS__SERVER__
         forward . __PILLAR__UPSTREAM__SERVERS__
         prometheus :9253
-        }
+    }
 ```
 
 https://github.com/kubernetes/kubernetes/blob/master/cluster/addons/dns/nodelocaldns/nodelocaldns.yaml
