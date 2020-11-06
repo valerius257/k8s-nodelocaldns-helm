@@ -1,5 +1,14 @@
 # NodeLocal DNSCache Helm chart
 
+## Helm Chart Repository
+
+```
+helm repo add cloudflare-exporter https://lablabs.github.io/k8s-nodelocaldns-helm/
+helm install k8s-nodelocaldns-helm/node-local-dns
+```
+
+## Configuration
+
 This chart deploys NodeLocal DNSCache Daemon set according to https://kubernetes.io/docs/tasks/administer-cluster/nodelocaldns/.
 
 It is designed to work both with iptables and IPVS setup.
