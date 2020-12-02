@@ -3,6 +3,15 @@ image:
   repository: k8s.gcr.io/k8s-dns-node-cache
   pullPolicy: IfNotPresent
   tag: 1.15.13
+  args:
+    skipTeardown: true
+    syncInterval: 1ns
+    interfaceName: nodelocaldns
+#    setupIptables: false
+#    logtoStderr: true
+#    alsoLogtoStderr: false
+    upstreamSvc: kube-dns
+#    stderrthreshold: 10
 
 imagePullSecrets: []
 
@@ -108,6 +117,3 @@ metrics:
   prometheusScrape: "true"
   port: 9253
 
-skipTeardown: true
-syncInterval: 1ns
-interfaceName: nodelocaldns

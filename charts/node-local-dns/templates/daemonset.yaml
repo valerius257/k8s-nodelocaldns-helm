@@ -38,15 +38,32 @@ spec:
           args:
             - -localip
             - "{{ .Values.config.localDnsIp }}"
-            {{- if .Values.skipTeardown }}
+            {{- if .Values.image.args.skipTeardown }}
             - -skipteardown
+            {{- end }}
+            {{- if .Values.image.args.setupIptables }}
+            - -setupiptables
+            {{- end }}
+            {{- if .Values.image.args.logtoStderr }}
+            - -logtostderr
+            {{- end }}
+            {{- if .Values.image.args.alsoLogtoStderr }}
+            - -alsologtostderr
+            {{- end }}
+            {{- if .Values.image.args.stderrThreshold }}
+            - -stderrthreshold
+            - {{ .Values.image.args.stderrThreshold }}
+            {{- end }}
+            {{- if .Values.image.args.upstreamSvc }}
+            - -upstreamsvc
+            - {{ .Values.image.args.upstreamSvc | quote }}
             {{- end }}
             - -conf
             - /etc/Corefile
             - -syncinterval
-            - {{ .Values.syncInterval }}
+            - {{ .Values.image.args.syncInterval }}
             - -interfacename
-            - {{ .Values.interfaceName }}
+            - {{ .Values.image.args.interfaceName }}
             - -metrics-listen-address
             - "0.0.0.0:{{add .Values.metrics.port 100}}"
           ports:

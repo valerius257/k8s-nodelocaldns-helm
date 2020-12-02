@@ -13,7 +13,43 @@ This chart deploys NodeLocal DNSCache Daemon set according to https://kubernetes
 
 It is designed to work both with iptables and IPVS setup.
 
-## Setting upstream DNS service
+Latest available `node-local-dns` image can be found at [node-local-dns google container repository](https://console.cloud.google.com/gcr/images/google-containers/GLOBAL/k8s-dns-node-cache)
+
+### Values
+
+The following table lists the configurable parameters of the Node-local-dns chart and their default values.
+
+| Parameter                | Description             | Default        |
+| ------------------------ | ----------------------- | -------------- |
+| `image.repository` |  | `"k8s.gcr.io/k8s-dns-node-cache"` |
+| `image.pullPolicy` |  | `"IfNotPresent"` |
+| `image.tag` |  | `"1.15.13"` |
+| `image.args.skipTeardown` |  | `true` |
+| `image.args.syncInterval` |  | `"1ns"` |
+| `image.args.interfaceName` |  | `"nodelocaldns"` |
+| `image.args.upstreamSvc` |  | `"kube-dns"` |
+| `imagePullSecrets` |  | `[]` |
+| `config.localDnsIp` |  | `"169.254.20.11"` |
+| `config.zones` |  | `[{"zone": ".:53", "plugins": {"errors": true, "reload": true, "debug": false, "log": true, "cache": {"parameters": 30, "denial": {}, "success": {}, "prefetch": {}, "serve_stale": false}, "forward": {"parameters": "__PILLAR__UPSTREAM__SERVERS__", "force_tcp": false, "prefer_udp": false, "policy": "", "max_fails": "", "expire": "", "health_check": ""}, "prometheus": true, "health": {"port": 8080}}}, {"zone": "ip6.arpa:53", "plugins": {"errors": true, "reload": true, "debug": false, "log": true, "cache": {"parameters": 30}, "forward": {"parameters": "__PILLAR__UPSTREAM__SERVERS__", "force_tcp": false}, "prometheus": true, "health": {"port": 8080}}}, {"zone": "in-addr.arpa:53", "plugins": {"errors": true, "reload": true, "debug": false, "log": true, "cache": {"parameters": 30}, "forward": {"parameters": "__PILLAR__UPSTREAM__SERVERS__", "force_tcp": false}, "prometheus": true, "health": {"port": 8080}}}]` |
+| `useHostNetwork` |  | `true` |
+| `updateStrategy.rollingUpdate.maxUnavailable` |  | `"10%"` |
+| `priorityClassName` |  | `"system-node-critical"` |
+| `podAnnotations` |  | `{}` |
+| `podSecurityContext` |  | `{}` |
+| `securityContext.privileged` |  | `true` |
+| `readinessProbe` |  | `null` |
+| `serviceAccount.create` |  | `true` |
+| `serviceAccount.annotations` |  | `{}` |
+| `serviceAccount.name` |  | `""` |
+| `nodeSelector` |  | `{}` |
+| `affinity` |  | `{}` |
+| `tolerations` |  | `[{"key": "CriticalAddonsOnly", "operator": "Exists"}, {"effect": "NoExecute", "operator": "Exists"}, {"effect": "NoSchedule", "operator": "Exists"}]` |
+| `resources.requests.cpu` |  | `"30m"` |
+| `resources.requests.memory` |  | `"50Mi"` |
+| `metrics.prometheusScrape` |  | `"true"` |
+| `metrics.port` |  | `9253` |
+
+### Setting upstream DNS service
 
 ```
 config:
