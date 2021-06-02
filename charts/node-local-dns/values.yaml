@@ -1,17 +1,17 @@
 ---
 image:
-  repository: k8s.gcr.io/k8s-dns-node-cache
+  repository: k8s.gcr.io/dns/k8s-dns-node-cache
   pullPolicy: IfNotPresent
-  tag: 1.15.13
+  tag: 1.17.4
   args:
+    interfaceName: nodelocaldns
+    healthPort: 8080
     skipTeardown: true
     syncInterval: 1ns
-    interfaceName: nodelocaldns
 #    setupIptables: false
-#    logtoStderr: true
-#    alsoLogtoStderr: false
-    upstreamSvc: kube-dns
-#    stderrthreshold: 10
+#    setupEbtables: false
+#    quiet: false
+#    upstreamSvc: kube-dns
 
 imagePullSecrets: []
 
@@ -23,7 +23,9 @@ config:
         errors: true
         reload: true
         debug: false
-        log: true
+        log:
+          format: combined
+          classes: all
         cache:
           parameters: 30
           denial: {}
@@ -53,7 +55,9 @@ config:
         errors: true
         reload: true
         debug: false
-        log: true
+        log:
+          format: combined
+          classes: all
         cache:
           parameters: 30
         forward:
@@ -67,7 +71,9 @@ config:
         errors: true
         reload: true
         debug: false
-        log: true
+        log:
+          format: combined
+          classes: all
         cache:
           parameters: 30
         forward:

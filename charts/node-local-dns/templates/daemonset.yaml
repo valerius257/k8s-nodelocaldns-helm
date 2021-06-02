@@ -41,18 +41,21 @@ spec:
             {{- if .Values.image.args.skipTeardown }}
             - -skipteardown
             {{- end }}
+            {{- if .Values.image.args.setupEptables }}
+            - -setupeptables
+            {{- end }}
+            {{- if .Values.image.args.setupInterface }}
+            - -setupinterface
+            {{- end }}
             {{- if .Values.image.args.setupIptables }}
             - -setupiptables
             {{- end }}
-            {{- if .Values.image.args.logtoStderr }}
-            - -logtostderr
+            {{- if .Values.image.args.quiet }}
+            - -quiet
             {{- end }}
-            {{- if .Values.image.args.alsoLogtoStderr }}
-            - -alsologtostderr
-            {{- end }}
-            {{- if .Values.image.args.stderrThreshold }}
-            - -stderrthreshold
-            - {{ .Values.image.args.stderrThreshold }}
+            {{- if .Values.image.args.healthPort }}
+            - -health-port
+            - {{ .Values.image.args.healthPort | quote }}
             {{- end }}
             {{- if .Values.image.args.upstreamSvc }}
             - -upstreamsvc
@@ -70,13 +73,16 @@ spec:
             - name: metrics
               containerPort: {{ .Values.metrics.port }}
               protocol: TCP
+            - name: health
+              containerPort: {{ .Values.image.args.healthPort | default(8080) }}
+              protocol: TCP
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           livenessProbe:
             httpGet:
               host: {{ .Values.config.localDnsIp }}
               path: /health
-              port: 8080
+              port: {{ .Values.image.args.healthPort | default(8080) }}
             initialDelaySeconds: 60
             timeoutSeconds: 5
           readinessProbe:

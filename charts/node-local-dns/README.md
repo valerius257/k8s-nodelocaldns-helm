@@ -21,13 +21,17 @@ The following table lists the configurable parameters of the Node-local-dns char
 
 | Parameter                | Description             | Default        |
 | ------------------------ | ----------------------- | -------------- |
-| `image.repository` |  | `"k8s.gcr.io/k8s-dns-node-cache"` |
+| `image.repository` |  | `"k8s.gcr.io/dns/k8s-dns-node-cache"` |
 | `image.pullPolicy` |  | `"IfNotPresent"` |
-| `image.tag` |  | `"1.15.13"` |
+| `image.tag` |  | `"1.17.4"` |
 | `image.args.skipTeardown` |  | `true` |
 | `image.args.syncInterval` |  | `"1ns"` |
 | `image.args.interfaceName` |  | `"nodelocaldns"` |
 | `image.args.upstreamSvc` |  | `"kube-dns"` |
+| `image.args.healthPort` | `8080` |
+| `image.args.setupIptables` | `false` |
+| `image.args.setupEbtables` | `false` |
+| `image.args.quiet` | `false` |
 | `imagePullSecrets` |  | `[]` |
 | `config.localDnsIp` |  | `"169.254.20.11"` |
 | `config.zones` |  | `[{"zone": ".:53", "plugins": {"errors": true, "reload": true, "debug": false, "log": true, "cache": {"parameters": 30, "denial": {}, "success": {}, "prefetch": {}, "serve_stale": false}, "forward": {"parameters": "__PILLAR__UPSTREAM__SERVERS__", "force_tcp": false, "prefer_udp": false, "policy": "", "max_fails": "", "expire": "", "health_check": ""}, "prometheus": true, "health": {"port": 8080}}}, {"zone": "ip6.arpa:53", "plugins": {"errors": true, "reload": true, "debug": false, "log": true, "cache": {"parameters": 30}, "forward": {"parameters": "__PILLAR__UPSTREAM__SERVERS__", "force_tcp": false}, "prometheus": true, "health": {"port": 8080}}}, {"zone": "in-addr.arpa:53", "plugins": {"errors": true, "reload": true, "debug": false, "log": true, "cache": {"parameters": 30}, "forward": {"parameters": "__PILLAR__UPSTREAM__SERVERS__", "force_tcp": false}, "prometheus": true, "health": {"port": 8080}}}]` |
@@ -60,7 +64,9 @@ config:
         errors: true
         reload: true
         debug: false
-        log: true
+        log:
+          fomat: common
+          classes: all
         cache:
           parameters: 30
           denial: {}
