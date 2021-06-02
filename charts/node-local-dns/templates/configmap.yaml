@@ -33,7 +33,7 @@ data:
       reload
       {{- end }}
       {{- if $zone.plugins.log }}
-      log . {{ $zone.plugins.log.format | default("combined") }} {
+      log . {{ default "combined" $zone.plugins.log.format }} {
         class {{ $zone.plugins.log.classes }}
       }
       {{- end }}

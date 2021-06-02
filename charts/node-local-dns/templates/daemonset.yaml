@@ -33,7 +33,7 @@ spec:
       dnsPolicy: Default
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - -localip
@@ -74,7 +74,7 @@ spec:
               containerPort: {{ .Values.metrics.port }}
               protocol: TCP
             - name: health
-              containerPort: {{ .Values.image.args.healthPort | default(8080) }}
+              containerPort: {{ default "8080" .Values.image.args.healthPort }}
               protocol: TCP
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -82,7 +82,7 @@ spec:
             httpGet:
               host: {{ .Values.config.localDnsIp }}
               path: /health
-              port: {{ .Values.image.args.healthPort | default(8080) }}
+              port: {{ default "8080" .Values.image.args.healthPort }}
             initialDelaySeconds: 60
             timeoutSeconds: 5
           readinessProbe:
