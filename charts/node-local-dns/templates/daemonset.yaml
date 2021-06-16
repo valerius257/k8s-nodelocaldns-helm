@@ -68,13 +68,10 @@ spec:
             - -interfacename
             - {{ .Values.image.args.interfaceName }}
             - -metrics-listen-address
-            - "0.0.0.0:{{add .Values.metrics.port 100}}"
+            - "0.0.0.0:{{ add .Values.metrics.port 100 }}"
           ports:
             - name: metrics
               containerPort: {{ .Values.metrics.port }}
-              protocol: TCP
-            - name: health
-              containerPort: {{ default "8080" .Values.image.args.healthPort }}
               protocol: TCP
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
