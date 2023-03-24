@@ -1,6 +1,6 @@
 ---
 image:
-  repository: k8s.gcr.io/dns/k8s-dns-node-cache
+  repository: registry.k8s.io/dns/k8s-dns-node-cache
   pullPolicy: IfNotPresent
   tag: 1.17.4
   args:
