@@ -16,7 +16,7 @@ image:
 imagePullSecrets: []
 
 config:
-  localDnsIp: 169.254.20.12
+  localDnsIp: 169.254.20.11
   zones:
     - .:53:
         plugins:
