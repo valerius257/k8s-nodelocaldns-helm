@@ -1,8 +1,8 @@
 ---
 image:
-  repository: k8s.gcr.io/dns/k8s-dns-node-cache
+  repository: registry.k8s.io/dns/k8s-dns-node-cache
   pullPolicy: IfNotPresent
-  tag: 1.17.4
+  tag: 1.22.9
   args:
     interfaceName: nodelocaldns
     healthPort: 8080
