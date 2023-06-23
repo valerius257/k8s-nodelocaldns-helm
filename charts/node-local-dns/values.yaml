@@ -40,7 +40,7 @@ config:
               # percentage: 20%
             serve_stale: false
           forward:
-            parameters: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
+            parameters: __PILLAR__UPSTREAM__SERVERS__   # defaults to /etc/resolv.conf
             force_tcp: false
             prefer_udp: false
             policy: "" # random|round_robin|sequential
@@ -62,7 +62,7 @@ config:
           cache:
             parameters: 30
           forward:
-            parameters: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
+            parameters: __PILLAR__UPSTREAM__SERVERS__   # defaults to /etc/resolv.conf
             force_tcp: false
           prometheus: true
           health:
@@ -78,7 +78,7 @@ config:
           cache:
             parameters: 30
           forward:
-            parameters: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
+            parameters: __PILLAR__UPSTREAM__SERVERS__   # defaults to /etc/resolv.conf
             force_tcp: false
           prometheus: true
           health:
