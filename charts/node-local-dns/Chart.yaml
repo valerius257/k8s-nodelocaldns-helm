@@ -1,7 +1,7 @@
 ---
 apiVersion: v2
 name: node-local-dns
-version: 1.4.0-rc.1 
+version: 1.4.0-rc.1
 appVersion: 1.22.9
 home: https://github.com/lablabs/k8s-nodelocaldns-helm
 description: NodeLocal DNS Cache helm chart
