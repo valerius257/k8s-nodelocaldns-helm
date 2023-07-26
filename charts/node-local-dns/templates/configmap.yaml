@@ -10,66 +10,68 @@ data:
     {{- $localDnsIp := .Values.config.localDnsIp -}}
     {{- $metricsPort := .Values.metrics.port -}}
 
-    {{- range $zone := .Values.config.zones }}
-    {{ $zone.zone }} {
-      {{- if $zone.plugins.errors }}
+    {{- range $k, $v := .Values.config.zones }}
+    {{ $k }} {
+    {{- range $v }}
+      {{- if $v.plugins.errors }}
       errors
       {{- end }}
-      cache {{ $zone.plugins.cache.parameters }} {
-        {{- if $zone.plugins.cache.denial }}
-        denial {{ $zone.plugins.cache.denial.size }} {{ if $zone.plugins.cache.denial.ttl }} {{ $zone.plugins.cache.denial.ttl }} {{ end }}
+      cache {{ $v.plugins.cache.parameters }} {
+        {{- if $v.plugins.cache.denial }}
+        denial {{ $v.plugins.cache.denial.size }} {{ if $v.plugins.cache.denial.ttl }} {{ $v.plugins.cache.denial.ttl }} {{ end }}
         {{- end }}
-        {{- if $zone.plugins.cache.success }}
-        success {{ $zone.plugins.cache.success.size }} {{ if $zone.plugins.cache.success.ttl }} {{ $zone.plugins.cache.success.ttl }} {{ end }}
+        {{- if $v.plugins.cache.success }}
+        success {{ $v.plugins.cache.success.size }} {{ if $v.plugins.cache.success.ttl }} {{ $v.plugins.cache.success.ttl }} {{ end }}
         {{- end }}
-        {{- if $zone.plugins.cache.prefetch }}
-        prefetch {{ $zone.plugins.cache.prefetch.amount }} {{ if $zone.plugins.cache.prefetch.duration }} {{ $zone.plugins.cache.prefetch.duration }} {{ end }} {{ if $zone.plugins.cache.prefetch.percentage }} {{ $zone.plugins.cache.prefetch.percentage }} {{ end }}
+        {{- if $v.plugins.cache.prefetch }}
+        prefetch {{ $v.plugins.cache.prefetch.amount }} {{ if $v.plugins.cache.prefetch.duration }} {{ $v.plugins.cache.prefetch.duration }} {{ end }} {{ if $v.plugins.cache.prefetch.percentage }} {{ $v.plugins.cache.prefetch.percentage }} {{ end }}
         {{- end }}
-        {{- if $zone.plugins.cache.server_stale }}
+        {{- if $v.plugins.cache.server_stale }}
         serve_stale
         {{- end }}
       }
-      {{- if $zone.plugins.reload }}
+      {{- if $v.plugins.reload }}
       reload
       {{- end }}
-      {{- if $zone.plugins.log }}
-      log . {{ default "combined" $zone.plugins.log.format }} {
-        class {{ $zone.plugins.log.classes }}
+      {{- if $v.plugins.log }}
+      log . {{ default "combined" $v.plugins.log.format }} {
+        class {{ $v.plugins.log.classes }}
       }
       {{- end }}
-      {{- if $zone.plugins.debug }}
+      {{- if $v.plugins.debug }}
       debug
       {{- end }}
       loop
       bind {{ $localDnsIp }}
-      forward . {{ $zone.plugins.forward.parameters }} {
-      {{- if $zone.plugins.forward.policy }}
-        policy {{ $zone.plugins.forward.policy }}
+      forward . {{ $v.plugins.forward.parameters }} {
+      {{- if $v.plugins.forward.policy }}
+        policy {{ $v.plugins.forward.policy }}
       {{- end }}
-      {{- if $zone.plugins.forward.force_tcp }}
+      {{- if $v.plugins.forward.force_tcp }}
         force_tcp
       {{- end }}
-      {{- if $zone.plugins.forward.prefer_udp }}
+      {{- if $v.plugins.forward.prefer_udp }}
         prefer_udp
       {{- end }}
-      {{- if $zone.plugins.forward.max_fails }}
-        max_fails {{ $zone.plugins.forward.max_fails }}
+      {{- if $v.plugins.forward.max_fails }}
+        max_fails {{ $v.plugins.forward.max_fails }}
       {{- end }}
-      {{- if $zone.plugins.forward.expire }}
-        expire {{ $zone.plugins.forward.expire }}
+      {{- if $v.plugins.forward.expire }}
+        expire {{ $v.plugins.forward.expire }}
       {{- end }}
-      {{- if $zone.plugins.forward.health_check }}
-        expire {{ $zone.plugins.forward.health_check }}
+      {{- if $v.plugins.forward.health_check }}
+        expire {{ $v.plugins.forward.health_check }}
       {{- end }}
-      {{- if $zone.plugins.forward.except }}
-        except {{ $zone.plugins.forward.except }}
+      {{- if $v.plugins.forward.except }}
+        except {{ $v.plugins.forward.except }}
       {{- end }}
       }
-      {{- if $zone.plugins.prometheus }}
+      {{- if $v.plugins.prometheus }}
       prometheus :{{ $metricsPort }}
       {{- end }}
-      {{- if $zone.plugins.health }}
-      health {{ $localDnsIp }}:{{ $zone.plugins.health.port }}
+      {{- if $v.plugins.health }}
+      health {{ $localDnsIp }}:{{ $v.plugins.health.port }}
       {{- end }}
+    {{- end }}
     }
     {{- end }}

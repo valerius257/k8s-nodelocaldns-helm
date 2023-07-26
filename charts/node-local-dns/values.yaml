@@ -1,8 +1,8 @@
 ---
 image:
-  repository: k8s.gcr.io/dns/k8s-dns-node-cache
+  repository: registry.k8s.io/dns/k8s-dns-node-cache
   pullPolicy: IfNotPresent
-  tag: 1.17.4
+  tag: 1.22.9
   args:
     interfaceName: nodelocaldns
     healthPort: 8080
@@ -18,7 +18,7 @@ imagePullSecrets: []
 config:
   localDnsIp: 169.254.20.11
   zones:
-    - zone: .:53
+    .:53:
       plugins:
         errors: true
         reload: true
@@ -40,18 +40,18 @@ config:
             # percentage: 20%
           serve_stale: false
         forward:
-          parameters: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
+          parameters: __PILLAR__UPSTREAM__SERVERS__   # defaults to /etc/resolv.conf
           force_tcp: false
           prefer_udp: false
-          policy: "" # random|round_robin|sequential
-          max_fails: "" # 10
-          expire: "" # 10s
-          health_check: "" # 10s
-          except: "" # space-separated list of domains to exclude from forwarding
+          policy: ""    # random|round_robin|sequential
+          max_fails: ""   # 10
+          expire: ""    # 10s
+          health_check: ""    # 10s
+          except: ""    # space-separated list of domains to exclude from forwarding
         prometheus: true
         health:
           port: 8080
-    - zone: ip6.arpa:53
+    ip6.arpa:53:
       plugins:
         errors: true
         reload: true
@@ -62,12 +62,12 @@ config:
         cache:
           parameters: 30
         forward:
-          parameters: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
+          parameters: __PILLAR__UPSTREAM__SERVERS__   # defaults to /etc/resolv.conf
           force_tcp: false
         prometheus: true
         health:
           port: 8080
-    - zone: in-addr.arpa:53
+    in-addr.arpa:53:
       plugins:
         errors: true
         reload: true
@@ -78,7 +78,7 @@ config:
         cache:
           parameters: 30
         forward:
-          parameters: __PILLAR__UPSTREAM__SERVERS__ # defaults to /etc/resolv.conf
+          parameters: __PILLAR__UPSTREAM__SERVERS__   # defaults to /etc/resolv.conf
           force_tcp: false
         prometheus: true
         health:
@@ -123,4 +123,3 @@ resources:
 metrics:
   prometheusScrape: "true"
   port: 9253
-
