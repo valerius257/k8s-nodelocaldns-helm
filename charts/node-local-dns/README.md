@@ -15,13 +15,50 @@ It is designed to work both with iptables and IPVS setup.
 
 Latest available `node-local-dns` image can be found at [node-local-dns google container repository](https://console.cloud.google.com/gcr/images/google-containers/GLOBAL/k8s-dns-node-cache)
 
+### Cilium
+
+For clusters running [cilium](https://cilium.io/), there is a CRD,
+[local-redirect-policy](https://docs.cilium.io/en/stable/network/kubernetes/local-redirect-policy/),
+which needs be extra enabled via `--set localRedirectPolicy=true`.
+It enables pod traffic destined to an IP address and port/protocol tuple or Kubernetes service to be redirected
+locally to backend pod(s) within a node, using eBPF.
+The namespace of backend pod(s) need to match with that of the policy.
+
+For using this feature, values should provides the following extra configuration,
+
+For getting the `CLUSTER_DNS_IP`,
+
+```console
+kubectl get svc kube-dns -n kube-system -o jsonpath={.spec.clusterIP}
+```
+
+```yaml
+config:
+  localDnsIp: CLUSTER_DNS_IP
+  cilium:
+    clusterDNSService: kube-dns
+    clusterDNSNamespace: kube-system
+    udp:
+      enabled: true
+      portName: dns
+    tcp:
+      enabled: true
+      portName: dns-tcp
+```
+
+#### RKE2
+
+As this feature heavily depends on the Cluster DNS implementation, for a [Rancher Kubernetes Engine 2](https://docs.rke2.io/) cluster,
+`clusterDNSService` should be `rke2-coredns-rke2-coredns`, and port names,
+`udp-53` and `tcp-53` respectively.
+
 ### Values
 
 The following table lists the configurable parameters of the Node-local-dns chart and their default values.
 
 | Parameter                | Description             | Default        |
 | ------------------------ | ----------------------- | -------------- |
-| `image.repository` |  | `"k8s.gcr.io/dns/k8s-dns-node-cache"` |
+| `image.repository` |  | `"registry.k8s.io/dns/k8s-dns-node-cache"` |
 | `image.pullPolicy` |  | `"IfNotPresent"` |
 | `image.tag` |  | `"1.22.9"` |
 | `image.args.skipTeardown` |  | `true` |
@@ -34,6 +71,12 @@ The following table lists the configurable parameters of the Node-local-dns char
 | `image.args.quiet` | `false` |
 | `imagePullSecrets` |  | `[]` |
 | `config.localDnsIp` |  | `"169.254.20.11"` |
+| `config.cilium.clusterDNSService` | Cluster DNS service name | `"kube-dns"` |
+| `config.cilium.clusterDNSNamespace` | Cluster DNS namespace | `"kube-system"` |
+| `config.cilium.udp.enabled` | Enable UDP port mapping upstream DNS service | `false` |
+| `config.cilium.udp.portName` | UDP port name upstream DNS service | `"dns"` |
+| `config.cilium.tcp.enabled` | Enable TCP port mapping upstream DNS service | `false` |
+| `config.cilium.tcp.portName` | TCP port name upstream DNS service | `"dns-tcp"` |
 | `config.zones` |  | `[{".:53":{"plugins":{"errors":true,"reload":true,"debug":false,"log":{"format":"combined","classes":"all"},"cache":{"parameters":30,"denial":{},"success":{},"prefetch":{},"serve_stale":false},"forward":{"parameters":"__PILLAR__UPSTREAM__SERVERS__","force_tcp":false,"prefer_udp":false,"policy":"","max_fails":"","expire":"","health_check":"","except":""},"prometheus":true,"health":{"port":8080}}}},{"ip6.arpa:53":{"plugins":{"errors":true,"reload":true,"debug":false,"log":{"format":"combined","classes":"all"},"cache":{"parameters":30},"forward":{"parameters":"__PILLAR__UPSTREAM__SERVERS__","force_tcp":false},"prometheus":true,"health":{"port":8080}}}},{"in-addr.arpa:53":{"plugins":{"errors":true,"reload":true,"debug":false,"log":{"format":"combined","classes":"all"},"cache":{"parameters":30},"forward":{"parameters":"__PILLAR__UPSTREAM__SERVERS__","force_tcp":false},"prometheus":true,"health":{"port":8080}}}}]` |
 | `useHostNetwork` |  | `true` |
 | `updateStrategy.rollingUpdate.maxUnavailable` |  | `"10%"` |
@@ -65,7 +108,7 @@ config:
           reload: true
           debug: false
           log:
-            fomat: common
+            format: common
             classes: all
           cache:
             parameters: 30

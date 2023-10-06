@@ -2,21 +2,30 @@
 image:
   repository: registry.k8s.io/dns/k8s-dns-node-cache
   pullPolicy: IfNotPresent
-  tag: 1.22.9
+  tag: 1.22.24
   args:
     interfaceName: nodelocaldns
     healthPort: 8080
     skipTeardown: true
     syncInterval: 1ns
-#    setupIptables: false
-#    setupEbtables: false
-#    quiet: false
-#    upstreamSvc: kube-dns
+    setupIptables: true
+    setupEbtables: true
+    quiet: false
+    upstreamSvc: kube-dns
 
 imagePullSecrets: []
 
 config:
   localDnsIp: 169.254.20.11
+#  cilium:
+#    clusterDNSService: kube-dns
+#    clusterDNSNamespace: kube-system
+#    udp:
+#      enabled: true
+#      portName: dns
+#    tcp:
+#      enabled: true
+#      portName: dns-tcp
   zones:
     .:53:
       plugins:
@@ -84,6 +93,7 @@ config:
         health:
           port: 8080
 
+# useHostNetwork is always false when using cilium
 useHostNetwork: true
 
 updateStrategy:
