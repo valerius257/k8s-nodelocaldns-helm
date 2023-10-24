@@ -7,6 +7,12 @@ helm repo add k8s-nodelocaldns-helm  https://lablabs.github.io/k8s-nodelocaldns-
 helm install k8s-nodelocaldns-helm/node-local-dns
 ```
 
+### Testing
+
+```console
+helm test node-local-dns
+```
+
 ## Configuration
 
 This chart deploys NodeLocal DNSCache Daemon set according to <https://kubernetes.io/docs/tasks/administer-cluster/nodelocaldns/>.
