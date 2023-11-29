@@ -34,6 +34,25 @@ data:
       {{- if $v.plugins.reload }}
       reload
       {{- end }}
+      {{- if $v.plugins.hosts }}
+      hosts {
+      {{- range $kk, $vv := $v.plugins.hosts.entries }}
+        {{ $vv.ip }} {{ $vv.name }}
+      {{- end }}
+      {{- if $v.plugins.hosts.ttl }}
+        ttl {{ $v.plugins.hosts.ttl }}
+      {{- end }}
+      {{- if $v.plugins.hosts.no_reverse }}
+        no_reverse
+      {{- end }}
+      {{- if $v.plugins.hosts.reload }}
+        reload {{ $v.plugins.hosts.reload | quote }}
+      {{- end }}
+      {{- if $v.plugins.hosts.fallthrough }}
+        fallthrough
+      {{- end }}
+      }
+      {{- end }}
       {{- if $v.plugins.log }}
       log . {{ default "combined" $v.plugins.log.format }} {
         class {{ $v.plugins.log.classes }}
