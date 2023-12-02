@@ -17,8 +17,9 @@ Click on `fork` on the top-right corner and fork the repository.
 
 ## 3. Install pre-commit
 
-- Install [pre-commit](https://pre-commit.com/#install) software  
-- Install [helm-docs](https://github.com/norwoodj/helm-docs#installation) pre-commit hook
+1. Install [pre-commit](https://pre-commit.com/#install) software  
+2. Install [helm-docs](https://github.com/norwoodj/helm-docs#installation) pre-commit hook
+3. Run `pre-commit install` in the repository root directory
 
 ## 4. Make the changes
 
@@ -26,11 +27,11 @@ Do the changes in your own GitHub namespace.
 
 ## 5. Test the changes
 
-Please test your changes locally. Also please run `helm lint charts/node-local-dns`.
+Test your changes locally. Also please run `helm lint charts/node-local-dns`.
 
 ## 6. Create a pull request
 
-Please create a pull request into the `main` branch. Here is [how to do it](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork).
+Please create a pull request into the `master` branch. Here is [how to do it](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork).
 
 ## 7. Semantic Commits
 
